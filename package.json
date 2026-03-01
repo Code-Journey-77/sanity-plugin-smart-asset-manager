@@ -31,7 +31,10 @@
     "sanity",
     "sanity-plugin",
     "asset-management",
-    "media-library"
+    "media-library",
+    "asset-manager",
+    "media-manager",
+    "sanity-plugin-smart-asset-manager"
   ],
   "author": "Code-Journey <codejourney.info@gmail.com>",
   "license": "MIT",
@@ -61,5 +64,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager/issues"
+  },
+  "homepage": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager#readme"
 }
