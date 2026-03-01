@@ -13,8 +13,8 @@ const TableHeader = styled(Box)`
   border-bottom: 1px solid var(--card-border-color);
 `
 
-const TableRow = styled(Flex)<{isLast?: boolean}>`
-  border-bottom: ${(props) => (props.isLast ? 'none' : '1px solid var(--card-border-color)')};
+const TableRow = styled(Flex)<{$isLast?: boolean}>`
+  border-bottom: ${(props) => (props.$isLast ? 'none' : '1px solid var(--card-border-color)')};
   transition: background 0.2s ease;
   &:hover {
     background: var(--card-bg-color);
@@ -87,7 +87,7 @@ export const SizeAnalyzer: React.FC<SizeAnalyzerProps> = ({assets}) => {
             padding={3}
             align="center"
             gap={3}
-            isLast={i === (sortedAssets.length < 50 ? sortedAssets.length - 1 : 49)}
+            $isLast={i === (sortedAssets.length < 50 ? sortedAssets.length - 1 : 49)}
           >
             {asset._type === 'sanity.imageAsset' ? (
               <Thumbnail src={`${asset.url}?w=40&h=40&fit=crop`} alt="" />

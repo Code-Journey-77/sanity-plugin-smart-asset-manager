@@ -23,6 +23,8 @@
     "prepublishOnly": "npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react,react-dom,sanity,@sanity/ui,styled-components"
   },
   "keywords": [
@@ -41,14 +43,20 @@
   },
   "devDependencies": {
     "@sanity/ui": "^3.1.13",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^5.1.4",
+    "jsdom": "^27.0.1",
     "prettier": "^3.5.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sanity": "^5.12.0",
+    "styled-components": "^6.1.8",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "styled-components": "^6.1.8"
+    "vitest": "^3.2.4"
   },
   "repository": {
     "type": "git",
