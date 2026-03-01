@@ -1,0 +1,8 @@
+pre-push:
+  commands:
+    test:
+      run: npm run test
+    build:
+      run: npm run build
+    format:
+      run: npm run format:check
