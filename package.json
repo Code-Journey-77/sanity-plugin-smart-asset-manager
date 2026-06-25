@@ -69,5 +69,8 @@
   "bugs": {
     "url": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager/issues"
   },
-  "homepage": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager#readme"
+  "homepage": "https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager#readme",
+  "allowScripts": {
+    "esbuild": true
+  }
 }
