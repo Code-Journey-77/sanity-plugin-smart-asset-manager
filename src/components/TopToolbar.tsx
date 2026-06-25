@@ -29,7 +29,7 @@ interface TopToolbarProps {
   setSizeFilter: (val: SizeFilter) => void
   onReset: () => void
   onUpload: (files: FileList) => void
-  isUploading: boolean
+  uploadState: {isUploading: boolean; uploaded: number; total: number}
 }
 
 export const TopToolbar: React.FC<TopToolbarProps> = ({
@@ -43,7 +43,7 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
   setSizeFilter,
   onReset,
   onUpload,
-  isUploading,
+  uploadState,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
@@ -118,10 +118,14 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
         <Button icon={ResetIcon} mode="ghost" onClick={onReset} title="Reset filters" />
         <Button
           icon={UploadIcon}
-          text={isUploading ? 'Uploading...' : 'Upload'}
+          text={
+            uploadState.isUploading
+              ? `Uploading ${uploadState.uploaded}/${uploadState.total}...`
+              : 'Upload'
+          }
           tone="primary"
           onClick={handleUploadClick}
-          loading={isUploading}
+          loading={uploadState.isUploading}
         />
       </Flex>
     </StickyCard>

@@ -7,21 +7,21 @@ An advanced, premium asset management dashboard for Sanity Studio. Stop guessing
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔍 Advanced Filtering & Sorting
+### Advanced Filtering & Sorting
 
 Easily navigate through your media library. Filter by **Images**, **Videos**, **Audio**, and other file types. Use the built-in size filters to find **Small (<100KB)**, **Medium (100KB-1MB)**, or **Large (>1MB)** files instantly.
 
 ![All Assets Dashboard](src/assets/images/all-assets.png)
 
-### 📊 Image Size Analyzer
+### Image Size Analyzer
 
 Identify performance bottlenecks. The Analyzer tab lists your assets by weight and dimensions. You can sort by file size (Weight) to quickly find unoptimized images that are slowing down your site.
 
 ![Size Analyzer](src/assets/images/size-analyzer.png)
 
-### 🧹 Unused Asset Detector & Bulk Cleanup
+### Unused Asset Detector & Bulk Cleanup
 
 Keep your dataset lean and save on storage costs.
 
@@ -31,23 +31,23 @@ Keep your dataset lean and save on storage costs.
 
 ![Unused Assets Cleanup](src/assets/images/unused-assets.png)
 
-### 🛡️ Duplicate Prevention
+### Duplicate Prevention
 
 Stop uploading the same file twice. The plugin automatically checks for existing filenames during upload and warns you if a duplicate is detected, keeping your library clean and organized.
 
-### 🔗 Deep Usage Tracking
+### Deep Usage Tracking
 
 Never delete a critical asset by mistake. Click any asset to see exactly which documents are referencing it. You can even click a document in the usage list to jump straight to the editor.
 
 ![Usage Details](src/assets/images/details-popup.png)
 
-### ⚡ Batch Uploads
+### Batch Uploads
 
 Upload multiple files at once. The plugin provides clear progress feedback and handles batch processing efficiently, with a smart 1-second delay after completion to ensure Sanity's backend has indexed your new files.
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install sanity-plugin-smart-asset-manager
@@ -59,7 +59,7 @@ pnpm add sanity-plugin-smart-asset-manager
 
 ---
 
-## 🛠 Usage
+## Usage
 
 1. Add the plugin to your `sanity.config.ts` (or `.js`):
 
@@ -80,7 +80,7 @@ export default defineConfig({
 
 ---
 
-## 🚀 Why This Plugin?
+## Why This Plugin?
 
 Sanity's default media library is great for selection, but maintenance can be challenging as libraries grow. **Smart Asset Manager** provides the power tools needed for:
 
@@ -90,20 +90,17 @@ Sanity's default media library is great for selection, but maintenance can be ch
 
 ---
 
-## 🛠️ Development & Building
+## ⚖️ License
 
-To build the plugin locally:
+MIT License © Code-Journey. All rights reserved.
 
-```bash
-npm run build
-```
-
-The plugin uses `tsup` for lightning-fast ESM and CJS builds with declaration types.
+Licensed under the MIT License. You may obtain a copy of the License at [LICENSE](LICENSE).
 
 ---
 
-## 📄 License
+## ⭐ Support & Feedback
 
-[MIT](LICENSE) © [Code Journey](https://github.com/Code-Journey-77)
+If you find this plugin helpful, intuitive, or visually stunning, please consider leaving a star on our repository! Your appreciation helps keep us motivated to design, update, and maintain premium developer tools.
 
----
+- 👉 **[Star the Repository on GitHub](https://github.com/Code-Journey-77/sanity-plugin-smart-asset-manager)**
+- 🔗 **[Sanity Plugin Marketplace Listing](https://www.sanity.io/plugins/sanity-plugin-smart-asset-manager)**

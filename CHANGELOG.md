@@ -2,6 +2,17 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [1.1.0] - 2026-06-25
+
+### 🛠 Improvements & Fixes
+
+- **Testing**: Fixed test timeouts by properly mocking Sanity UI dependencies (`ResizeObserver`, `IntersectionObserver`, `matchMedia`, `requestAnimationFrame`).
+- **Testing**: Increased Vitest default timeout to prevent failures in heavy component rendering.
+- **Typing**: Added `@types/node` to resolve TypeScript compilation errors with Node built-in modules like `path`.
+- **CI**: Updated GitHub Actions matrix to test on newer Node.js versions (22.x, 24.x, 26.x).
+- **Sanity Version**: Updated dependencies to support Sanity v6.0.0.
+- **Code Quality**: Formatted all source files with Prettier to maintain a clean codebase.
+
 ## [1.0.0] - 2026-03-01
 
 ### 🚀 Features

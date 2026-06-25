@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-smart-asset-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An advanced asset management plugin for Sanity Studio with smart filtering, size analysis, unused asset detection, broken asset checks, and usage tracking.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -41,7 +41,7 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "sanity": "^3.0.0 || ^4.0.0 || ^5.0.0",
+    "sanity": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
@@ -49,6 +49,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.0.1",
     "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^5.1.4",
     "jsdom": "^27.0.1",
