@@ -2,6 +2,13 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [1.1.1] - 2026-07-05
+
+### 🛠 Improvements & Fixes
+
+- **CI**: Added a GitHub Actions workflow to automatically build and publish the package to npm when a release is published.
+- **Release**: Bumped version to `1.1.1` in package configuration.
+
 ## [1.1.0] - 2026-06-25
 
 ### 🛠 Improvements & Fixes
