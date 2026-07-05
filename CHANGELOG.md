@@ -2,7 +2,7 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
-## [1.1.2] - 2026-07-05
+## [1.1.3] - 2026-07-05
 
 ### 🛠 Improvements & Fixes
 
