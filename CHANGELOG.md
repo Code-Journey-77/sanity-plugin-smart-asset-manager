@@ -2,6 +2,12 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [1.1.2] - 2026-07-05
+
+### 🛠 Improvements & Fixes
+
+- **CI**: Fixed workflow permissions and bumped Node version to 24 in publish action.
+
 ## [1.1.1] - 2026-07-05
 
 ### 🛠 Improvements & Fixes
