@@ -15,11 +15,17 @@ Easily navigate through your media library. Filter by **Images**, **Videos**, **
 
 ![All Assets Dashboard](src/assets/images/all-assets.png)
 
-### Image Size Analyzer
+### Live Document & PDF Previews
 
-Identify performance bottlenecks. The Analyzer tab lists your assets by weight and dimensions. You can sort by file size (Weight) to quickly find unoptimized images that are slowing down your site.
+Preview PDF files, Word documents, Excel spreadsheets, PowerPoint presentations, and text files directly inside the grid and list views with seamless, scrollbar-free inline rendering.
 
-![Size Analyzer](src/assets/images/size-analyzer.png)
+### Skeleton Loading Screens
+
+Enjoy smooth visual feedback with custom shimmer skeleton screens across **All Assets**, **Size Analyzer**, and **Unused Assets** tabs.
+
+### Complete Dataset Size Analyzer
+
+Identify storage and performance bottlenecks. The Analyzer scans your full asset library by file weight and dimensions, allowing you to sort by size to locate unoptimized media across your entire dataset.
 
 ### Unused Asset Detector & Bulk Cleanup
 

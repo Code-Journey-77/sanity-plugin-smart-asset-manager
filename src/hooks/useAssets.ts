@@ -40,23 +40,28 @@ export function useAssets(
         }
 
         const filter = filterParts.join(' && ')
+        const params = {
+          searchQuery: `*${searchQuery}*`,
+        }
+
         const countQuery = `count(*[${filter}])`
         const query = `*[${filter}] | order(${sortBy} desc) [${offset}...${offset + limit}] {
-                                 _id,
-                                 _type,
-                                 url,
-                                 extension,
-                                 size,
-                                 mimeType,
-                                 originalFilename,
-                                 metadata {
-                                     dimensions
-                                 }
-                                 }`
+          _id,
+          _type,
+          url,
+          extension,
+          size,
+          mimeType,
+          originalFilename,
+          _createdAt,
+          metadata {
+            dimensions
+          }
+        }`
 
         const [totalCount, results] = await Promise.all([
-          sanityClient.fetch(countQuery, {searchQuery: `*${searchQuery}*`}),
-          sanityClient.fetch(query, {searchQuery: `*${searchQuery}*`}),
+          sanityClient.fetch(countQuery, params),
+          sanityClient.fetch(query, params),
         ])
 
         setTotal(totalCount)

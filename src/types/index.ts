@@ -7,6 +7,7 @@ export interface Asset {
   mimeType?: string
   size: number
   originalFilename?: string
+  _createdAt?: string
   metadata?: {
     dimensions?: {
       width: number
@@ -27,3 +28,4 @@ export type AssetTab = 'all' | 'analysis' | 'unused'
 export type SortOrder = '_createdAt' | 'size' | 'originalFilename'
 export type AssetTypeFilter = 'all' | 'image' | 'file' | 'video' | 'audio'
 export type SizeFilter = 'all' | 'small' | 'medium' | 'large'
+export type ViewMode = 'grid' | 'list'

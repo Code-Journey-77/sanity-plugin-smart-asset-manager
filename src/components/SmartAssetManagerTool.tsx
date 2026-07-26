@@ -1,18 +1,20 @@
 import {useState, useMemo, useEffect, useRef} from 'react'
-import {Box, Grid, Text, Stack, Flex, Spinner, Card, Button, useToast} from '@sanity/ui'
+import {Box, Grid, Text, Flex, Card, Button, useToast} from '@sanity/ui'
 import {useClient} from 'sanity'
 import {useAssets} from '@/hooks/useAssets'
 import {findUnusedAssets, deleteAssets} from '@/utils/assetQueries'
 import {uploadFileWithProgress} from '@/utils/uploadWithProgress'
 import {compressImageIfNeeded} from '@/utils/compressImage'
-import type {Asset, AssetTab, AssetTypeFilter, SizeFilter, SortOrder} from '@/types'
+import type {Asset, AssetTab, AssetTypeFilter, SizeFilter, SortOrder, ViewMode} from '@/types'
 import type {FileUploadItem} from '@/components/UploadProgressModal'
 import {AssetCard} from '@/components/AssetCard'
+import {AssetListView} from '@/components/AssetListView'
 import {AssetDetailsDialog} from '@/components/AssetDetailsDialog'
 import {TopToolbar} from '@/components/TopToolbar'
 import {UploadProgressModal} from '@/components/UploadProgressModal'
 import {SizeAnalyzer} from '@/components/tabs/SizeAnalyzer'
 import {UnusedAssets} from '@/components/tabs/UnusedAssets'
+import {AssetGridSkeleton, AssetListSkeleton} from '@/components/common/Skeleton'
 import styled from 'styled-components'
 
 const AppContainer = styled(Card)`
@@ -37,6 +39,7 @@ export function SmartAssetManagerTool() {
   const [sortBy, setSortBy] = useState<SortOrder>('_createdAt')
   const [assetType, setAssetType] = useState<AssetTypeFilter>('all')
   const [sizeFilter, setSizeFilter] = useState<SizeFilter>('all')
+  const [viewMode, setViewMode] = useState<ViewMode>('grid')
 
   const limit = 20
   const [currentPage, setCurrentPage] = useState(1)
@@ -59,12 +62,12 @@ export function SmartAssetManagerTool() {
 
   // Derived upload state for the toolbar button
   const uploadState = useMemo(() => {
-    const total = uploadItems.length
+    const totalItems = uploadItems.length
     const uploaded = uploadItems.filter(
       (i) => i.status === 'done' || i.status === 'skipped' || i.status === 'error',
     ).length
-    const isUploading = total > 0 && uploaded < total
-    return {isUploading, uploaded, total}
+    const isUploading = totalItems > 0 && uploaded < totalItems
+    return {isUploading, uploaded, total: totalItems}
   }, [uploadItems])
 
   // Auto-clear the modal 2.5 s after all items finish
@@ -152,10 +155,13 @@ export function SmartAssetManagerTool() {
     // 1. Batch-check which files already exist
     let existingAssetNames: string[] = []
     try {
-      existingAssetNames = await sanityClient.fetch<string[]>(
+      const res = await sanityClient.fetch<string[]>(
         `*[_type in ["sanity.imageAsset", "sanity.fileAsset"] && originalFilename in $filenames].originalFilename`,
         {filenames},
       )
+      if (Array.isArray(res)) {
+        existingAssetNames = res
+      }
     } catch {
       toast.push({
         status: 'error',
@@ -293,6 +299,8 @@ export function SmartAssetManagerTool() {
             setAssetType={setAssetType}
             sizeFilter={sizeFilter}
             setSizeFilter={setSizeFilter}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
             onReset={handleResetFilters}
             onUpload={handleUpload}
             uploadState={uploadState}
@@ -300,31 +308,28 @@ export function SmartAssetManagerTool() {
         )}
 
         <Box padding={4}>
-          {loading || scanning ? (
-            <Flex align="center" justify="center" style={{minHeight: '400px'}}>
-              <Stack space={4}>
-                <Flex align="center" justify="center">
-                  <Spinner muted />
-                </Flex>
-                <Text size={1} muted>
-                  Syncing with media library...
-                </Text>
-              </Stack>
-            </Flex>
-          ) : (
+          {activeTab === 'all' && (
             <Box>
-              {activeTab === 'all' && (
+              {loading ? (
+                viewMode === 'grid' ? (
+                  <AssetGridSkeleton count={limit} />
+                ) : (
+                  <AssetListSkeleton count={8} />
+                )
+              ) : filteredAssets.length === 0 ? (
+                <Card padding={5} border radius={3} style={{textAlign: 'center'}}>
+                  <Text muted>No assets found matching your filters.</Text>
+                </Card>
+              ) : (
                 <Box>
-                  {filteredAssets.length === 0 ? (
-                    <Card padding={5} border radius={3} style={{textAlign: 'center'}}>
-                      <Text muted>No assets found matching your filters.</Text>
-                    </Card>
-                  ) : (
+                  {viewMode === 'grid' ? (
                     <Grid columns={[2, 3, 4, 5, 6]} gap={3}>
                       {filteredAssets.map((asset) => (
                         <AssetCard key={asset._id} asset={asset} onClick={setSelectedAsset} />
                       ))}
                     </Grid>
+                  ) : (
+                    <AssetListView assets={filteredAssets} onClick={setSelectedAsset} />
                   )}
 
                   {total > limit && (
@@ -352,17 +357,20 @@ export function SmartAssetManagerTool() {
                   )}
                 </Box>
               )}
-
-              {activeTab === 'analysis' && <SizeAnalyzer assets={assets} />}
-
-              {activeTab === 'unused' && (
-                <UnusedAssets
-                  unusedAssets={unusedAssets}
-                  onBulkDelete={handleDeleteAsset}
-                  onAssetClick={setSelectedAsset}
-                />
-              )}
             </Box>
+          )}
+
+          {activeTab === 'analysis' && (
+            <SizeAnalyzer assets={assets} onAssetClick={setSelectedAsset} />
+          )}
+
+          {activeTab === 'unused' && (
+            <UnusedAssets
+              unusedAssets={unusedAssets}
+              onBulkDelete={handleDeleteAsset}
+              onAssetClick={setSelectedAsset}
+              loading={scanning}
+            />
           )}
         </Box>
       </ScrollableContent>

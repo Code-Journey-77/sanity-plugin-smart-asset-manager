@@ -4,7 +4,7 @@ Thank you for your interest in contributing! We welcome all contributions, from 
 
 ## 🛠 Prerequisites
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 22 or higher)
 - [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
 - A local [Sanity Studio](https://www.sanity.io/studio) to test the plugin.
 

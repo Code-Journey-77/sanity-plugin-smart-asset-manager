@@ -2,6 +2,23 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [1.2.0] - 2026-07-26
+
+### 🚀 Features
+
+- **Skeleton Loading Screens**: Introduced shimmer skeleton loaders across **All Assets** (Grid & List), **Size Analyzer**, and **Unused Assets** tabs for smooth UI rendering during data fetches.
+- **Live Document & PDF Previews**: Interactive inline previews for PDFs, Word documents, Excel spreadsheets, PowerPoint slides, and text files directly in Grid and List views.
+- **Full Dataset Size Analyzer**: Updated Size Analyzer to fetch and analyze the entire asset library instead of limiting to paginated batches.
+
+### 🧹 Cleanup & Refactoring
+
+- **List View Previews**: Added thumbnail & document previews in List View to match Grid View capabilities.
+
+### 🛠 Fixes & Polish
+
+- **Iframe Scrollbars**: Removed unwanted scrollbars from embedded PDF and Google Document viewer previews.
+- **Test Suite**: Updated test mocks and added `Skeleton.test.tsx` to verify component rendering.
+
 ## [1.1.3] - 2026-07-05
 
 ### 🛠 Improvements & Fixes

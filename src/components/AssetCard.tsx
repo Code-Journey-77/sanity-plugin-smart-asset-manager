@@ -58,6 +58,34 @@ const VideoPreview = styled.video`
   background: #000;
 `
 
+const IframeWrapper = styled(Box)`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+`
+
+const IframePreview = styled.iframe`
+  width: 118%;
+  height: 118%;
+  position: absolute;
+  top: -9%;
+  left: -9%;
+  border: none;
+  pointer-events: none;
+  background: #ffffff;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+`
+
 const ActionBar = styled(Flex)`
   position: absolute;
   bottom: 8px;
@@ -88,6 +116,14 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
   const isVideo = asset?.mimeType?.startsWith('video/')
   const isAudio = asset?.mimeType?.startsWith('audio/')
   const isPdf = asset?.extension === 'pdf' || asset?.mimeType === 'application/pdf'
+  const docExtensions = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'rtf', 'odt']
+  const isDoc =
+    docExtensions.includes(asset?.extension?.toLowerCase() || '') ||
+    Boolean(asset?.mimeType?.includes('word')) ||
+    Boolean(asset?.mimeType?.includes('document')) ||
+    Boolean(asset?.mimeType?.includes('excel')) ||
+    Boolean(asset?.mimeType?.includes('sheet')) ||
+    Boolean(asset?.mimeType?.includes('presentation'))
 
   const handleCardClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return
@@ -112,6 +148,22 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
           />
         ) : isVideo ? (
           <VideoPreview src={asset.url} muted playsInline />
+        ) : isPdf ? (
+          <IframeWrapper>
+            <IframePreview
+              src={`${asset.url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+              title={asset.originalFilename || 'PDF Preview'}
+              {...({scrolling: 'no'} as Record<string, string>)}
+            />
+          </IframeWrapper>
+        ) : isDoc ? (
+          <IframeWrapper>
+            <IframePreview
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(asset.url)}&embedded=true`}
+              title={asset.originalFilename || 'Document Preview'}
+              {...({scrolling: 'no'} as Record<string, string>)}
+            />
+          </IframeWrapper>
         ) : (
           <Flex
             direction="column"
@@ -120,14 +172,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
             gap={3}
             style={{height: '100%', width: '100%'}}
           >
-            {isPdf ? (
-              <PdfIcon
-                style={{
-                  fontSize: '48px',
-                  color: '#ef4444',
-                }}
-              />
-            ) : isAudio ? (
+            {isAudio ? (
               <AudioIcon
                 style={{
                   fontSize: '48px',
@@ -161,9 +206,14 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
         </ActionBar>
       </ImageContainer>
       <Box padding={3}>
-        <Stack space={3}>
+        <Stack space={2}>
           <Flex align="center" direction="column" gap={2}>
-            <Text size={1} weight="semibold" textOverflow="ellipsis" style={{flex: 1}}>
+            <Text
+              size={1}
+              weight="semibold"
+              textOverflow="ellipsis"
+              style={{flex: 1, width: '100%'}}
+            >
               {asset.originalFilename || asset._id.substring(0, 10)}
             </Text>
             <Badge tone={asset.size > 1048576 ? 'caution' : 'default'} fontSize={0}>

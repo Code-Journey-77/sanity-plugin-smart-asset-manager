@@ -17,7 +17,7 @@ import {
 } from '@sanity/ui'
 import type {Asset, ReferencedDocument} from '@/types'
 import {formatBytes} from '@/utils/formatBytes'
-import {DocumentsIcon, DownloadIcon, TrashIcon, PdfIcon, AudioIcon} from '@/components/common/Icons'
+import {DocumentsIcon, DownloadIcon, TrashIcon, AudioIcon} from '@/components/common/Icons'
 import {type SanityClient} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {getAssetUsage, updateAssetFilename} from '@/utils/assetQueries'
@@ -172,6 +172,14 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
   const isVideo = asset?.mimeType?.startsWith('video/')
   const isAudio = asset?.mimeType?.startsWith('audio/')
   const isPdf = asset?.extension === 'pdf' || asset?.mimeType === 'application/pdf'
+  const docExtensions = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'rtf', 'odt']
+  const isDoc =
+    docExtensions.includes(asset?.extension?.toLowerCase() || '') ||
+    Boolean(asset?.mimeType?.includes('word')) ||
+    Boolean(asset?.mimeType?.includes('document')) ||
+    Boolean(asset?.mimeType?.includes('excel')) ||
+    Boolean(asset?.mimeType?.includes('sheet')) ||
+    Boolean(asset?.mimeType?.includes('presentation'))
 
   return (
     <Dialog
@@ -250,7 +258,12 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
               ) : isVideo ? (
                 <VideoPreview src={asset.url} controls muted playsInline />
               ) : isPdf ? (
-                <PdfPreview src={asset.url} title="PDF Preview" />
+                <PdfPreview src={`${asset.url}#toolbar=0&navpanes=0`} title="PDF Preview" />
+              ) : isDoc ? (
+                <PdfPreview
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(asset.url)}&embedded=true`}
+                  title="Document Preview"
+                />
               ) : isAudio ? (
                 <Flex direction="column" align="center" gap={4} style={{width: '100%'}}>
                   <AudioIcon style={{fontSize: '64px', color: '#ef4444'}} />
@@ -264,18 +277,12 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
                   gap={3}
                   style={{height: '300px', width: '100%'}}
                 >
-                  {isPdf ? (
-                    <PdfIcon style={{fontSize: '80px', color: '#ef4444'}} />
-                  ) : isAudio ? (
-                    <AudioIcon style={{fontSize: '80px', color: '#ef4444'}} />
-                  ) : (
-                    <DocumentsIcon
-                      style={{
-                        fontSize: '80px',
-                        color: '#9ca3af',
-                      }}
-                    />
-                  )}
+                  <DocumentsIcon
+                    style={{
+                      fontSize: '80px',
+                      color: '#9ca3af',
+                    }}
+                  />
                 </Flex>
               )}
             </PreviewContainer>

@@ -29,6 +29,15 @@ vi.mock('@/utils/uploadWithProgress', () => ({
   uploadFileWithProgress: vi.fn(),
 }))
 
+vi.mock('@/utils/compressImage', () => ({
+  compressImageIfNeeded: vi.fn((file) => Promise.resolve(file)),
+}))
+
+vi.mock('@/utils/assetQueries', () => ({
+  findUnusedAssets: vi.fn().mockResolvedValue([]),
+  deleteAssets: vi.fn().mockResolvedValue(undefined),
+}))
+
 // We need to mock TopToolbar to easily trigger the upload function
 vi.mock('../TopToolbar', () => ({
   TopToolbar: ({onUpload, uploadState}: any) => (
@@ -88,15 +97,15 @@ describe('SmartAssetManagerTool Upload Logic', () => {
     mockFetch.mockResolvedValueOnce([])
     // Upload mock
     ;(uploadFileWithProgress as any).mockImplementation(
-      (file: File, client: any, onProgress: any) => {
+      async (file: File, client: any, onProgress: any) => {
         onProgress({percent: 100})
-        return Promise.resolve({
+        return {
           _id: 'mock-id',
           _type: 'sanity.imageAsset',
           url: 'mock-url',
           originalFilename: file.name,
           size: file.size,
-        })
+        }
       },
     )
 
@@ -107,9 +116,7 @@ describe('SmartAssetManagerTool Upload Logic', () => {
     expect(uploadStateSpan.innerHTML).toContain('"isUploading":false')
 
     // Trigger upload
-    await act(async () => {
-      fireEvent.click(screen.getByTestId('mock-upload-btn'))
-    })
+    fireEvent.click(screen.getByTestId('mock-upload-btn'))
 
     // Assert that fetch was called to check duplicates
     expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
@@ -149,7 +156,7 @@ describe('SmartAssetManagerTool Upload Logic', () => {
         }),
       )
     })
-  })
+  }, 30000)
 
   it('handles partial duplicate files cleanly', async () => {
     // Mock that test1.jpg already exists

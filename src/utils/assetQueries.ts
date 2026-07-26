@@ -32,6 +32,7 @@ export async function findUnusedAssets(sanityClient: SanityClient): Promise<Asse
     extension,
     mimeType,
     originalFilename,
+    _createdAt,
     metadata { dimensions }
   }`
 
@@ -56,4 +57,27 @@ export async function updateAssetFilename(
   filename: string,
 ) {
   return await sanityClient.patch(assetId).set({originalFilename: filename}).commit()
+}
+
+/**
+ * Fetches all assets without pagination for full dataset size analysis.
+ */
+export async function fetchAllAssets(sanityClient: SanityClient): Promise<Asset[]> {
+  try {
+    const query = `*[_type in ["sanity.imageAsset", "sanity.fileAsset"]] | order(size desc) {
+      _id,
+      _type,
+      url,
+      extension,
+      size,
+      mimeType,
+      originalFilename,
+      _createdAt,
+      metadata { dimensions }
+    }`
+    return await sanityClient.fetch(query)
+  } catch (error) {
+    console.error('Error fetching all assets:', error)
+    return []
+  }
 }

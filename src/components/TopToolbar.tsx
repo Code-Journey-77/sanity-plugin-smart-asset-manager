@@ -1,7 +1,7 @@
 import React from 'react'
 import {Flex, Box, TextInput, Select, Button, Card} from '@sanity/ui'
-import {SearchIcon, ResetIcon, UploadIcon} from '@/components/common/Icons'
-import type {AssetTypeFilter, SizeFilter, SortOrder} from '@/types'
+import {SearchIcon, ResetIcon, UploadIcon, GridIcon, ListIcon} from '@/components/common/Icons'
+import type {AssetTypeFilter, SizeFilter, SortOrder, ViewMode} from '@/types'
 import styled from 'styled-components'
 
 const StickyCard = styled(Card)`
@@ -27,6 +27,8 @@ interface TopToolbarProps {
   setAssetType: (val: AssetTypeFilter) => void
   sizeFilter: SizeFilter
   setSizeFilter: (val: SizeFilter) => void
+  viewMode?: ViewMode
+  setViewMode?: (mode: ViewMode) => void
   onReset: () => void
   onUpload: (files: FileList) => void
   uploadState: {isUploading: boolean; uploaded: number; total: number}
@@ -41,6 +43,8 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
   setAssetType,
   sizeFilter,
   setSizeFilter,
+  viewMode = 'grid',
+  setViewMode,
   onReset,
   onUpload,
   uploadState,
@@ -61,7 +65,7 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
 
   return (
     <StickyCard padding={3} borderBottom>
-      <Flex align="center" gap={3}>
+      <Flex align="center" gap={3} wrap="wrap">
         <input
           type="file"
           ref={fileInputRef}
@@ -79,7 +83,7 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
             fontSize={1}
           />
         </SearchBox>
-        <Box>
+        <Box style={{width: '130px'}}>
           <Select
             fontSize={1}
             value={sortBy}
@@ -115,6 +119,22 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
             <option value="large">&gt; 1MB</option>
           </Select>
         </FilterBox>
+        {setViewMode && (
+          <Flex gap={1}>
+            <Button
+              icon={GridIcon}
+              mode={viewMode === 'grid' ? 'default' : 'ghost'}
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+            />
+            <Button
+              icon={ListIcon}
+              mode={viewMode === 'list' ? 'default' : 'ghost'}
+              onClick={() => setViewMode('list')}
+              title="List View"
+            />
+          </Flex>
+        )}
         <Button icon={ResetIcon} mode="ghost" onClick={onReset} title="Reset filters" />
         <Button
           icon={UploadIcon}
