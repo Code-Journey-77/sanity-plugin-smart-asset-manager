@@ -1,4 +1,5 @@
 import {CloseIcon} from '@/components/common/Icons'
+import {formatBytes} from '@/utils/formatBytes'
 import {Badge, Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import React from 'react'
 import styled, {css, keyframes} from 'styled-components'
@@ -166,12 +167,6 @@ const PercentLabel = styled.span<{$status: FileUploadStatus}>`
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 function statusTone(
   status: FileUploadStatus,
 ): 'positive' | 'critical' | 'caution' | 'primary' | 'default' {
@@ -228,7 +223,7 @@ export const UploadProgressModal: React.FC<UploadProgressModalProps> = ({items, 
 
             <Flex align="center" justify="space-between">
               <Text size={0} muted>
-                {formatSize(bytesUploaded)} / {formatSize(bytesTotal)}
+                {formatBytes(bytesUploaded)} / {formatBytes(bytesTotal)}
               </Text>
               <Text size={0} muted>
                 {overallPct}%
@@ -263,7 +258,7 @@ export const UploadProgressModal: React.FC<UploadProgressModalProps> = ({items, 
 
                   {/* File size */}
                   <Text size={0} muted style={{flexShrink: 0}}>
-                    {formatSize(item.size)}
+                    {formatBytes(item.size)}
                   </Text>
 
                   {/* Percent */}

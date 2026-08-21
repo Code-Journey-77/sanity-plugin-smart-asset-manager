@@ -105,6 +105,17 @@ export default defineConfig({
 })
 ```
 
+### Custom Configuration (Optional)
+
+You can customize the tool title, internal name, and navigation icon:
+
+```typescript
+smartAssetManager({
+  title: 'Media Hub', // Custom tool title in Studio navbar
+  name: 'custom-asset-manager', // Custom tool route name
+})
+```
+
 2. Open your Sanity Studio. You will see a new **Smart Asset Manager** tool in your navigation bar.
 
 ---

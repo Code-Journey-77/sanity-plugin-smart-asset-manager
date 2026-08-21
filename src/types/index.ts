@@ -37,3 +37,10 @@ export type SortOrder =
 export type AssetTypeFilter = 'all' | 'image' | 'file' | 'video' | 'audio'
 export type SizeFilter = 'all' | 'small' | 'medium' | 'large'
 export type ViewMode = 'grid' | 'list'
+
+export interface SmartAssetManagerConfig {
+  title?: string
+  name?: string
+  icon?: React.ComponentType
+  apiVersion?: string
+}

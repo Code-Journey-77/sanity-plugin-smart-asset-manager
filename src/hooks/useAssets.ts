@@ -19,6 +19,8 @@ export function useAssets(
   const refreshAssets = () => setRefreshSeed((s) => s + 1)
 
   useEffect(() => {
+    let isCancelled = false
+
     async function fetchAssets() {
       setLoading(true)
       try {
@@ -93,16 +95,26 @@ export function useAssets(
           sanityClient.fetch(query, params),
         ])
 
-        setTotal(totalCount)
-        setAssets(results || [])
+        if (!isCancelled) {
+          setTotal(totalCount)
+          setAssets(results || [])
+        }
       } catch (error) {
-        console.error('Error fetching assets:', error)
+        if (!isCancelled) {
+          console.error('Error fetching assets:', error)
+        }
       } finally {
-        setLoading(false)
+        if (!isCancelled) {
+          setLoading(false)
+        }
       }
     }
 
     fetchAssets()
+
+    return () => {
+      isCancelled = true
+    }
   }, [sanityClient, searchQuery, sortBy, type, sizeFilter, refreshSeed, offset, limit])
 
   return {assets, loading, total, refreshAssets}

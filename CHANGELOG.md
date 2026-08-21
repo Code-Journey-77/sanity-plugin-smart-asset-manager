@@ -2,11 +2,23 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [2.0.1] - 2026-08-21
+
+### 🚀 Enhancements & Features
+
+- **Plugin Configuration API**: Added `SmartAssetManagerConfig` allowing developers to customize the tool `title`, `name`, and navigation `icon` directly in `sanity.config.ts`.
+- **Public TypeScript Exports**: Exported core types (`Asset`, `SmartAssetManagerConfig`, `SortOrder`, `SizeFilter`, `AssetTypeFilter`, `ReferencedDocument`, `ViewMode`) and the `formatBytes` utility directly from the package entry point.
+
+### 🛠 Code Quality & Performance
+
+- **Memory & Race-Condition Safety**: Implemented unmount guards and cancellation tracking (`isCancelled` / `isMounted`) across asset fetching hooks and details dialogs to prevent memory leaks and state overrides.
+- **Unified Utility Architecture**: Consolidated file size formatting across all components (`UploadProgressModal`, `AssetCard`, `AssetListView`, `SizeAnalyzer`, `AssetDetailsDialog`) into a single `formatBytes` utility.
+
 ## [2.0.0] - 2026-08-21
 
 ### ⚠️ Compatibility & Requirements (Breaking Changes)
 
-- **Sanity Studio v5 / v6 Required**: `v2.0.0` requires Sanity Studio **v5.x** or **v6.x** (`sanity: ^5.0.0 || ^6.0.0`).
+- **Sanity Studio v5 / v6 Required**: `v2.0.0+` requires Sanity Studio **v5.x** or **v6.x** (`sanity: ^5.0.0 || ^6.0.0`).
 - **Sanity UI v4**: Built and optimized for `@sanity/ui` **^4.0.0** and React 18 / 19.
 - **Legacy Sanity Studio Support**: If you are using **Sanity Studio v3.x** or `@sanity/ui` v2/v3, please use **`sanity-plugin-smart-asset-manager@1.2.0`**.
 

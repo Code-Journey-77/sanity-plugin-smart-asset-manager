@@ -103,18 +103,26 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
   const router = useRouter()
 
   useEffect(() => {
+    let isMounted = true
     async function fetchUsage() {
       setLoadingUsage(true)
       try {
         const results = await getAssetUsage(sanityClient, asset._id)
-        setUsage(results)
+        if (isMounted) {
+          setUsage(results || [])
+        }
       } catch (err) {
         console.error(err)
       } finally {
-        setLoadingUsage(false)
+        if (isMounted) {
+          setLoadingUsage(false)
+        }
       }
     }
     fetchUsage()
+    return () => {
+      isMounted = false
+    }
   }, [asset._id, sanityClient])
 
   const handleUpdate = async () => {

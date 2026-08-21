@@ -42,7 +42,10 @@ export async function findUnusedAssets(sanityClient: SanityClient): Promise<Asse
 /**
  * Bulk delete assets.
  */
-export async function deleteAssets(sanityClient: SanityClient, assetIds: string[]) {
+export async function deleteAssets(
+  sanityClient: SanityClient,
+  assetIds: string[],
+): Promise<unknown> {
   const transaction = sanityClient.transaction()
   assetIds.forEach((id) => transaction.delete(id))
   return await transaction.commit()
@@ -55,7 +58,7 @@ export async function updateAssetFilename(
   sanityClient: SanityClient,
   assetId: string,
   filename: string,
-) {
+): Promise<unknown> {
   return await sanityClient.patch(assetId).set({originalFilename: filename}).commit()
 }
 
