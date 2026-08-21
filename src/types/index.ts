@@ -25,7 +25,15 @@ export interface ReferencedDocument {
 export type UsageInfo = {[assetId: string]: ReferencedDocument[]}
 
 export type AssetTab = 'all' | 'analysis' | 'unused'
-export type SortOrder = '_createdAt' | 'size' | 'originalFilename'
+export type SortOrder =
+  | '_createdAt'
+  | '_createdAt_asc'
+  | 'size'
+  | 'size_desc'
+  | 'size_asc'
+  | 'originalFilename'
+  | 'name_asc'
+  | 'name_desc'
 export type AssetTypeFilter = 'all' | 'image' | 'file' | 'video' | 'audio'
 export type SizeFilter = 'all' | 'small' | 'medium' | 'large'
 export type ViewMode = 'grid' | 'list'

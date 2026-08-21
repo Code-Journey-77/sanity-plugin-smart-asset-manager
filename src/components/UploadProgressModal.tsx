@@ -1,7 +1,7 @@
+import {CloseIcon} from '@/components/common/Icons'
+import {Badge, Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import React from 'react'
-import {Box, Card, Text, Flex, Stack, Button, Badge} from '@sanity/ui'
-import {CloseIcon} from '@sanity/icons'
-import styled, {keyframes, css} from 'styled-components'
+import styled, {css, keyframes} from 'styled-components'
 
 export type FileUploadStatus = 'pending' | 'uploading' | 'done' | 'error' | 'skipped'
 
@@ -210,7 +210,7 @@ export const UploadProgressModal: React.FC<UploadProgressModalProps> = ({items, 
       <ModalShell radius={3}>
         {/* ── Header ── */}
         <Box padding={4} style={{borderBottom: '1px solid var(--card-border-color)'}}>
-          <Stack space={3}>
+          <Stack gap={3}>
             <Flex align="center" justify="space-between">
               <Text size={2} weight="semibold">
                 {isAllDone ? '✓ Upload Complete' : 'Uploading Files'}

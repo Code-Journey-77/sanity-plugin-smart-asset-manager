@@ -1,26 +1,26 @@
-import React, {useState, useEffect} from 'react'
+import {AudioIcon, DocumentsIcon, DownloadIcon, TrashIcon} from '@/components/common/Icons'
+import type {Asset, ReferencedDocument} from '@/types'
+import {getAssetUsage, updateAssetFilename} from '@/utils/assetQueries'
+import {formatBytes} from '@/utils/formatBytes'
 import {
+  Badge,
   Box,
+  Button,
+  Card,
+  Dialog,
   Flex,
+  Grid,
+  Label,
+  Spinner,
   Stack,
   Text,
-  Badge,
-  Button,
-  Dialog,
   TextInput,
-  Label,
-  Card,
-  Grid,
-  Spinner,
-  useToast,
-  Tooltip,
 } from '@sanity/ui'
-import type {Asset, ReferencedDocument} from '@/types'
-import {formatBytes} from '@/utils/formatBytes'
-import {DocumentsIcon, DownloadIcon, TrashIcon, AudioIcon} from '@/components/common/Icons'
+import {useToast} from '@sanity/ui/toast'
+import {Tooltip} from '@sanity/ui/tooltip'
+import React, {useEffect, useState} from 'react'
 import {type SanityClient} from 'sanity'
 import {useRouter} from 'sanity/router'
-import {getAssetUsage, updateAssetFilename} from '@/utils/assetQueries'
 import styled from 'styled-components'
 
 const PreviewContainer = styled(Box)`
@@ -250,8 +250,8 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
             </Box>
           </Dialog>
         )}
-        <Grid columns={[1, 1, 2]} gap={4}>
-          <Stack space={4}>
+        <Grid gridTemplateColumns={[1, 1, 2]} gap={4}>
+          <Stack gap={4}>
             <PreviewContainer>
               {isImage ? (
                 <PreviewImage src={`${asset.url}?w=800`} alt="" />
@@ -287,7 +287,7 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
               )}
             </PreviewContainer>
 
-            <Stack space={3}>
+            <Stack gap={3}>
               <Box>
                 <Label size={1}>Original Filename</Label>
                 <Flex gap={2} marginTop={2}>
@@ -309,11 +309,11 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
               </Box>
 
               <Card padding={3} border radius={2}>
-                <Stack space={3}>
+                <Stack gap={3}>
                   <Text weight="bold" size={1}>
                     File Information
                   </Text>
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     <Flex align="flex-start" gap={3}>
                       <Box style={{minWidth: '85px'}}>
                         <Text size={1} muted>
@@ -334,7 +334,7 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
                         </Text>
                       </Box>
                       <Box flex={1}>
-                        <Badge tone="primary" mode="outline" fontSize={0}>
+                        <Badge tone="primary" fontSize={0}>
                           {(asset.extension || asset.mimeType?.split('/')[1])?.toUpperCase() ||
                             'OTHER'}
                         </Badge>
@@ -379,7 +379,7 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
             </Stack>
           </Stack>
 
-          <Stack space={4}>
+          <Stack gap={4}>
             <Text weight="bold" size={1}>
               Usage in Documents
             </Text>
@@ -388,7 +388,7 @@ export const AssetDetailsDialog: React.FC<AssetDetailsDialogProps> = ({
                 <Spinner />
               </Flex>
             ) : usage?.length > 0 ? (
-              <Stack space={2} style={{maxHeight: '500px', overflowY: 'auto'}}>
+              <Stack gap={2} style={{maxHeight: '500px', overflowY: 'auto'}}>
                 {usage?.map((doc) => (
                   <UsageCard
                     key={doc._id}

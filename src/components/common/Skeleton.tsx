@@ -1,5 +1,5 @@
-import React from 'react'
 import {Box, Card, Flex, Grid, Stack} from '@sanity/ui'
+import React from 'react'
 import styled, {keyframes} from 'styled-components'
 
 const pulse = keyframes`
@@ -44,14 +44,14 @@ export const AssetGridSkeleton: React.FC<{count?: number}> = ({count = 12}) => {
   const items = Array.from({length: count}, (_, i) => i)
 
   return (
-    <Grid columns={[2, 3, 4, 5, 6]} gap={3}>
+    <Grid gridTemplateColumns={[2, 3, 4, 5, 6]} gap={3}>
       {items.map((i) => (
         <StyledCard key={i} radius={3}>
           <ImageSkeletonContainer>
             <SkeletonBox $height="100%" $width="100%" $radius={0} />
           </ImageSkeletonContainer>
           <Box padding={3}>
-            <Stack space={2}>
+            <Stack gap={2}>
               <Flex align="center" direction="column" gap={2}>
                 <SkeletonBox $height="14px" $width="75%" $radius={3} />
                 <SkeletonBox $height="18px" $width="45px" $radius={10} />

@@ -1,23 +1,12 @@
-import React, {useState, useMemo, useEffect} from 'react'
-import {
-  Stack,
-  Heading,
-  Card,
-  Box,
-  Flex,
-  Text,
-  Badge,
-  Button,
-  TextInput,
-  Select,
-  Spinner,
-} from '@sanity/ui'
-import * as Sanity from 'sanity'
-import type {Asset, AssetTypeFilter, SizeFilter} from '@/types'
-import {formatBytes} from '@/utils/formatBytes'
-import {fetchAllAssets} from '@/utils/assetQueries'
-import {DocumentsIcon, AudioIcon, SortIcon, SearchIcon, ResetIcon} from '@/components/common/Icons'
+import {AudioIcon, DocumentsIcon, ResetIcon, SearchIcon, SortIcon} from '@/components/common/Icons'
 import {SizeAnalyzerSkeleton} from '@/components/common/Skeleton'
+import type {Asset, AssetTypeFilter, SizeFilter} from '@/types'
+import {fetchAllAssets} from '@/utils/assetQueries'
+import {formatBytes} from '@/utils/formatBytes'
+import {Badge, Box, Button, Card, Flex, Heading, Select, Stack, Text, TextInput} from '@sanity/ui'
+import React, {useEffect, useMemo, useState} from 'react'
+import type {SanityClient} from 'sanity'
+import * as Sanity from 'sanity'
 import styled from 'styled-components'
 
 const TableCard = styled(Card)`
@@ -122,9 +111,9 @@ export const SizeAnalyzer: React.FC<SizeAnalyzerProps> = ({
     setAllAssets(initialAssets)
   }, [initialAssets])
 
-  let client: any = null
+  let client: SanityClient | null = null
   try {
-    client = Sanity?.useClient?.({apiVersion: '2025-02-07'})
+    client = Sanity?.useClient?.({apiVersion: '2026-07-28'})
   } catch (e) {
     // client unavailable in test environment without Sanity context
   }
@@ -135,7 +124,7 @@ export const SizeAnalyzer: React.FC<SizeAnalyzerProps> = ({
     async function loadAll() {
       setLoadingAll(true)
       try {
-        const fetched = await fetchAllAssets(client)
+        const fetched = await fetchAllAssets(client as SanityClient)
         if (isMounted && fetched && fetched.length > 0) {
           setAllAssets(fetched)
         }
@@ -226,7 +215,7 @@ export const SizeAnalyzer: React.FC<SizeAnalyzerProps> = ({
   }
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Flex align="center" justify="space-between">
         <Heading size={1}>Asset Size & Weight Analyzer</Heading>
         <Text size={1} muted>

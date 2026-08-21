@@ -2,6 +2,30 @@
 
 All notable changes to the **Sanity Plugin Smart Asset Manager** will be documented in this file.
 
+## [2.0.0] - 2026-08-21
+
+### ⚠️ Compatibility & Requirements (Breaking Changes)
+
+- **Sanity Studio v5 / v6 Required**: `v2.0.0` requires Sanity Studio **v5.x** or **v6.x** (`sanity: ^5.0.0 || ^6.0.0`).
+- **Sanity UI v4**: Built and optimized for `@sanity/ui` **^4.0.0** and React 18 / 19.
+- **Legacy Sanity Studio Support**: If you are using **Sanity Studio v3.x** or `@sanity/ui` v2/v3, please use **`sanity-plugin-smart-asset-manager@1.2.0`**.
+
+### 🚀 Features & Enhancements
+
+- **Multi-Directional Sorting Engine**:
+  - **Name (A-Z)** and **Name (Z-A)** with case-insensitive ordering (`lower(originalFilename)`).
+  - **Upload Date (Newest)** and **Upload Date (Oldest)**.
+  - **Size (High to Low)** and **Size (Low to High)**.
+- **Server-Side Size Filtering in GROQ**: Moved asset size filters (`<100KB`, `100KB-1MB`, `>1MB`) directly into GROQ queries for accurate database pagination and total count calculations.
+- **Extended Search & Type Detection**:
+  - Added file extension matching to search queries alongside filenames and document IDs.
+  - Improved video and audio type filtering with fallback extension checks for assets without standard MIME types.
+
+### 🛠 Fixes & Polish
+
+- **Full State Reset**: Fixed toolbar reset button to properly reset active sort order back to defaults alongside search, type, and size filters.
+- **Modern Sanity UI Compatibility**: Standardized Tooltip and Toast subpath imports for seamless compatibility with latest `@sanity/ui` v4 and v3.
+
 ## [1.2.0] - 2026-07-26
 
 ### 🚀 Features

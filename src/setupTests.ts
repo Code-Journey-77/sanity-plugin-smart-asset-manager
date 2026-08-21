@@ -49,3 +49,35 @@ vi.stubGlobal(
     }
   },
 )
+
+// Polyfill DataTransfer for jsdom (not implemented natively)
+class DataTransferItemList {
+  private _files: File[] = []
+
+  add(file: File) {
+    this._files.push(file)
+  }
+
+  get length() {
+    return this._files.length
+  }
+
+  [Symbol.iterator]() {
+    return this._files[Symbol.iterator]()
+  }
+}
+
+class DataTransferPolyfill {
+  items: DataTransferItemList = new DataTransferItemList()
+
+  get files(): FileList {
+    const files = (this.items as unknown as {_files: File[]})._files
+    return Object.assign(files, {
+      item: (i: number) => files[i] ?? null,
+    }) as unknown as FileList
+  }
+}
+
+if (typeof globalThis.DataTransfer === 'undefined') {
+  vi.stubGlobal('DataTransfer', DataTransferPolyfill)
+}

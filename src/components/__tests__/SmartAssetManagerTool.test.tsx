@@ -1,12 +1,19 @@
-import {render, screen, fireEvent, waitFor, act} from '@testing-library/react'
-import {describe, it, expect, vi, beforeEach} from 'vitest'
-import {SmartAssetManagerTool} from '../SmartAssetManagerTool'
-import {useClient} from 'sanity'
-import {useToast, ThemeProvider} from '@sanity/ui'
-import {buildTheme} from '@sanity/ui/theme'
 import {useAssets} from '@/hooks/useAssets'
+import type {UploadProgressEvent} from '@/utils/uploadWithProgress'
 import {uploadFileWithProgress} from '@/utils/uploadWithProgress'
+import type {InitializedClientConfig} from '@sanity/client'
+import {ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import React from 'react'
+import type {SanityClient} from 'sanity'
+import {useClient} from 'sanity'
+import type {Mock} from 'vitest'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {SmartAssetManagerTool} from '../SmartAssetManagerTool'
+import type {TopToolbarProps} from '../TopToolbar'
+
+import {useToast} from '@sanity/ui/toast'
 
 // Mock dependencies
 vi.mock('sanity', () => ({
@@ -14,12 +21,16 @@ vi.mock('sanity', () => ({
 }))
 
 vi.mock('@sanity/ui', async (importOriginal) => {
-  const actual: any = await importOriginal()
+  const actual = await importOriginal<typeof import('@sanity/ui')>()
   return {
     ...actual,
     useToast: vi.fn(),
   }
 })
+
+vi.mock('@sanity/ui/toast', () => ({
+  useToast: vi.fn(),
+}))
 
 vi.mock('@/hooks/useAssets', () => ({
   useAssets: vi.fn(),
@@ -30,7 +41,7 @@ vi.mock('@/utils/uploadWithProgress', () => ({
 }))
 
 vi.mock('@/utils/compressImage', () => ({
-  compressImageIfNeeded: vi.fn((file) => Promise.resolve(file)),
+  compressImageIfNeeded: vi.fn((file: File) => Promise.resolve(file)),
 }))
 
 vi.mock('@/utils/assetQueries', () => ({
@@ -40,18 +51,17 @@ vi.mock('@/utils/assetQueries', () => ({
 
 // We need to mock TopToolbar to easily trigger the upload function
 vi.mock('../TopToolbar', () => ({
-  TopToolbar: ({onUpload, uploadState}: any) => (
+  TopToolbar: ({onUpload, uploadState}: TopToolbarProps) => (
     <div data-testid="mock-top-toolbar">
       <span data-testid="upload-state">{JSON.stringify(uploadState)}</span>
       <button
         data-testid="mock-upload-btn"
         onClick={() => {
           // Simulate uploading 2 mock files
-          const files = [
-            new File([''], 'test1.jpg', {type: 'image/jpeg'}),
-            new File([''], 'test2.pdf', {type: 'application/pdf'}),
-          ] as any
-          onUpload(files)
+          const dt = new DataTransfer()
+          dt.items.add(new File([''], 'test1.jpg', {type: 'image/jpeg'}))
+          dt.items.add(new File([''], 'test2.pdf', {type: 'application/pdf'}))
+          onUpload(dt.files)
         }}
       >
         Trigger Upload
@@ -71,24 +81,24 @@ describe('SmartAssetManagerTool Upload Logic', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(useToast as any).mockReturnValue({
+    ;(useToast as Mock).mockReturnValue({
       push: mockToastPush,
     })
-    ;(useAssets as any).mockReturnValue({
+    ;(useAssets as Mock).mockReturnValue({
       assets: [],
       loading: false,
       total: 0,
       refreshAssets: mockRefreshAssets,
     })
-    ;(useClient as any).mockReturnValue({
+    ;(useClient as Mock).mockReturnValue({
       fetch: mockFetch,
-      config: () => ({
+      config: vi.fn().mockReturnValue({
         projectId: 'test-project',
         dataset: 'test-dataset',
         apiVersion: '2025-02-07',
         token: 'test-token',
-      }),
-    })
+      } as InitializedClientConfig) as unknown as SanityClient['config'],
+    } satisfies Partial<SanityClient>)
   })
 
   it('handles uploading concurrently and tracks progress', async () => {
@@ -96,8 +106,8 @@ describe('SmartAssetManagerTool Upload Logic', () => {
     // No existing files (all new)
     mockFetch.mockResolvedValueOnce([])
     // Upload mock
-    ;(uploadFileWithProgress as any).mockImplementation(
-      async (file: File, client: any, onProgress: any) => {
+    ;(uploadFileWithProgress as Mock).mockImplementation(
+      async (file: File, _client: SanityClient, onProgress: (e: UploadProgressEvent) => void) => {
         onProgress({percent: 100})
         return {
           _id: 'mock-id',
@@ -161,7 +171,7 @@ describe('SmartAssetManagerTool Upload Logic', () => {
   it('handles partial duplicate files cleanly', async () => {
     // Mock that test1.jpg already exists
     mockFetch.mockResolvedValueOnce(['test1.jpg'])
-    ;(uploadFileWithProgress as any).mockResolvedValue({})
+    ;(uploadFileWithProgress as Mock).mockResolvedValue({})
 
     renderWithTheme(<SmartAssetManagerTool />)
 
@@ -195,7 +205,7 @@ describe('SmartAssetManagerTool Upload Logic', () => {
   it('reports warning if partial upload failure occurs', async () => {
     mockFetch.mockResolvedValueOnce([])
     // First upload succeeds, second upload fails
-    ;(uploadFileWithProgress as any)
+    ;(uploadFileWithProgress as Mock)
       .mockResolvedValueOnce({})
       .mockRejectedValueOnce(new Error('Network error'))
 

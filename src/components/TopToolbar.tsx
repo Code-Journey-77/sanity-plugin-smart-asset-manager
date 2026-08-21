@@ -1,7 +1,7 @@
-import React from 'react'
-import {Flex, Box, TextInput, Select, Button, Card} from '@sanity/ui'
-import {SearchIcon, ResetIcon, UploadIcon, GridIcon, ListIcon} from '@/components/common/Icons'
+import {GridIcon, ListIcon, ResetIcon, SearchIcon, UploadIcon} from '@/components/common/Icons'
 import type {AssetTypeFilter, SizeFilter, SortOrder, ViewMode} from '@/types'
+import {Box, Button, Card, Flex, Select, TextInput} from '@sanity/ui'
+import React from 'react'
 import styled from 'styled-components'
 
 const StickyCard = styled(Card)`
@@ -18,7 +18,7 @@ const FilterBox = styled(Box)`
   width: 140px;
 `
 
-interface TopToolbarProps {
+export interface TopToolbarProps {
   searchQuery: string
   setSearchQuery: (val: string) => void
   sortBy: SortOrder
@@ -83,15 +83,18 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
             fontSize={1}
           />
         </SearchBox>
-        <Box style={{width: '130px'}}>
+        <Box style={{width: '160px'}}>
           <Select
             fontSize={1}
             value={sortBy}
             onChange={(e) => setSortBy(e.currentTarget.value as SortOrder)}
           >
-            <option value="_createdAt">Upload Date</option>
-            <option value="size">File Size</option>
-            <option value="originalFilename">Name A-Z</option>
+            <option value="_createdAt">Upload Date (Newest)</option>
+            <option value="_createdAt_asc">Upload Date (Oldest)</option>
+            <option value="originalFilename">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+            <option value="size">Size (High to Low)</option>
+            <option value="size_asc">Size (Low to High)</option>
           </Select>
         </Box>
         <FilterBox>

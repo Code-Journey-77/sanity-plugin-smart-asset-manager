@@ -1,8 +1,8 @@
-import React from 'react'
-import {Box, Flex, Stack, Text, Badge, Button, Card, Checkbox} from '@sanity/ui'
+import {AudioIcon, DocumentsIcon, DownloadIcon} from '@/components/common/Icons'
 import type {Asset} from '@/types'
 import {formatBytes} from '@/utils/formatBytes'
-import {DocumentsIcon, DownloadIcon, PdfIcon, AudioIcon} from '@/components/common/Icons'
+import {Badge, Box, Button, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
+import React from 'react'
 import styled from 'styled-components'
 
 const StyledCard = styled(Card)`
@@ -134,10 +134,12 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
     <StyledCard radius={3} onClick={handleCardClick} selected={isSelected}>
       <ImageContainer>
         {onSelect && (
-          <SelectOverlay onClick={(e) => e.stopPropagation()}>
+          <SelectOverlay onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <Checkbox
               checked={isSelected}
-              onChange={(e) => onSelect(asset._id, e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onSelect(asset._id, e.target.checked)
+              }
             />
           </SelectOverlay>
         )}
@@ -206,7 +208,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({asset, onClick, isSelected,
         </ActionBar>
       </ImageContainer>
       <Box padding={3}>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Flex align="center" direction="column" gap={2}>
             <Text
               size={1}

@@ -1,20 +1,21 @@
-import {useState, useMemo, useEffect, useRef} from 'react'
-import {Box, Grid, Text, Flex, Card, Button, useToast} from '@sanity/ui'
-import {useClient} from 'sanity'
-import {useAssets} from '@/hooks/useAssets'
-import {findUnusedAssets, deleteAssets} from '@/utils/assetQueries'
-import {uploadFileWithProgress} from '@/utils/uploadWithProgress'
-import {compressImageIfNeeded} from '@/utils/compressImage'
-import type {Asset, AssetTab, AssetTypeFilter, SizeFilter, SortOrder, ViewMode} from '@/types'
-import type {FileUploadItem} from '@/components/UploadProgressModal'
 import {AssetCard} from '@/components/AssetCard'
-import {AssetListView} from '@/components/AssetListView'
 import {AssetDetailsDialog} from '@/components/AssetDetailsDialog'
+import {AssetListView} from '@/components/AssetListView'
 import {TopToolbar} from '@/components/TopToolbar'
+import type {FileUploadItem} from '@/components/UploadProgressModal'
 import {UploadProgressModal} from '@/components/UploadProgressModal'
+import {AssetGridSkeleton, AssetListSkeleton} from '@/components/common/Skeleton'
 import {SizeAnalyzer} from '@/components/tabs/SizeAnalyzer'
 import {UnusedAssets} from '@/components/tabs/UnusedAssets'
-import {AssetGridSkeleton, AssetListSkeleton} from '@/components/common/Skeleton'
+import {useAssets} from '@/hooks/useAssets'
+import type {Asset, AssetTab, AssetTypeFilter, SizeFilter, SortOrder, ViewMode} from '@/types'
+import {deleteAssets, findUnusedAssets} from '@/utils/assetQueries'
+import {compressImageIfNeeded} from '@/utils/compressImage'
+import {uploadFileWithProgress} from '@/utils/uploadWithProgress'
+import {Box, Button, Card, Flex, Grid, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
+import {useEffect, useMemo, useRef, useState} from 'react'
+import {useClient} from 'sanity'
 import styled from 'styled-components'
 
 const AppContainer = styled(Card)`
@@ -48,6 +49,7 @@ export function SmartAssetManagerTool() {
     searchQuery,
     sortBy,
     assetType,
+    sizeFilter,
     (currentPage - 1) * limit,
     limit,
   )
@@ -84,18 +86,9 @@ export function SmartAssetManagerTool() {
   const [unusedAssets, setUnusedAssets] = useState<Asset[]>([])
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
 
-  const filteredAssets = useMemo(() => {
-    return assets.filter((asset) => {
-      if (sizeFilter === 'small') return asset.size < 102400
-      if (sizeFilter === 'medium') return asset.size >= 102400 && asset.size < 1048576
-      if (sizeFilter === 'large') return asset.size >= 1048576
-      return true
-    })
-  }, [assets, sizeFilter])
-
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, assetType, sizeFilter, activeTab])
+  }, [searchQuery, sortBy, assetType, sizeFilter, activeTab])
 
   const handleFindUnused = async () => {
     setScanning(true)
@@ -115,6 +108,7 @@ export function SmartAssetManagerTool() {
 
   const handleResetFilters = () => {
     setSearchQuery('')
+    setSortBy('_createdAt')
     setAssetType('all')
     setSizeFilter('all')
     setCurrentPage(1)
@@ -316,20 +310,20 @@ export function SmartAssetManagerTool() {
                 ) : (
                   <AssetListSkeleton count={8} />
                 )
-              ) : filteredAssets.length === 0 ? (
+              ) : assets.length === 0 ? (
                 <Card padding={5} border radius={3} style={{textAlign: 'center'}}>
                   <Text muted>No assets found matching your filters.</Text>
                 </Card>
               ) : (
                 <Box>
                   {viewMode === 'grid' ? (
-                    <Grid columns={[2, 3, 4, 5, 6]} gap={3}>
-                      {filteredAssets.map((asset) => (
+                    <Grid gridTemplateColumns={[2, 3, 4, 5, 6]} gap={3}>
+                      {assets.map((asset) => (
                         <AssetCard key={asset._id} asset={asset} onClick={setSelectedAsset} />
                       ))}
                     </Grid>
                   ) : (
-                    <AssetListView assets={filteredAssets} onClick={setSelectedAsset} />
+                    <AssetListView assets={assets} onClick={setSelectedAsset} />
                   )}
 
                   {total > limit && (

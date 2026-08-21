@@ -9,9 +9,14 @@ An advanced, premium asset management dashboard for Sanity Studio. Stop guessing
 
 ## Features
 
-### Advanced Filtering & Sorting
+### Advanced Filtering & Multi-Directional Sorting
 
-Easily navigate through your media library. Filter by **Images**, **Videos**, **Audio**, and other file types. Use the built-in size filters to find **Small (<100KB)**, **Medium (100KB-1MB)**, or **Large (>1MB)** files instantly.
+Easily navigate through your media library:
+
+- **Comprehensive Sorting**: Sort assets by **Upload Date (Newest/Oldest)**, **Name (A-Z / Z-A)**, and **File Size (High to Low / Low to High)**.
+- **Media Type Filtering**: Filter by **Images**, **Videos**, **Audio**, and **Other Files** with robust MIME and extension fallbacks.
+- **Server-Side Size Filters**: Quickly locate **Small (<100KB)**, **Medium (100KB–1MB)**, or **Large (>1MB)** files with accurate dataset pagination.
+- **Fast Search & Instant Reset**: Search across filenames, document IDs, and file extensions with a single-click reset button to restore default views.
 
 ![All Assets Dashboard](src/assets/images/all-assets.png)
 
@@ -50,6 +55,23 @@ Never delete a critical asset by mistake. Click any asset to see exactly which d
 ### Batch Uploads
 
 Upload multiple files at once. The plugin provides clear progress feedback and handles batch processing efficiently, with a smart 1-second delay after completion to ensure Sanity's backend has indexed your new files.
+
+---
+
+## ⚠️ Compatibility Note
+
+| Package | Version Requirement |
+|---|---|
+| **Sanity Studio (`sanity`)** | **`^5.0.0` or `^6.0.0`** *(Required for v2.0.0+)* |
+| **Sanity UI (`@sanity/ui`)** | **`^4.0.0`** |
+| **React (`react`, `react-dom`)** | **`^18.0.0` or `^19.0.0`** |
+| **Styled Components** | **`^6.0.0`** |
+
+> **Legacy Studio Support (Sanity v3.x)**:
+> If you are using **Sanity Studio v3.x** or earlier versions of `@sanity/ui` (v3/v4), please install **`sanity-plugin-smart-asset-manager@1.2.0`**:
+> ```bash
+> npm install sanity-plugin-smart-asset-manager@1.2.0
+> ```
 
 ---
 

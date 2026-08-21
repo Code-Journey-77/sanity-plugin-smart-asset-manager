@@ -1,24 +1,26 @@
-import React, {useState, useMemo} from 'react'
-import {
-  Stack,
-  Flex,
-  Heading,
-  Button,
-  Card,
-  Text,
-  Grid,
-  Dialog,
-  Box,
-  Checkbox,
-  TextInput,
-  Select,
-} from '@sanity/ui'
-import type {Asset, AssetTypeFilter, SizeFilter, ViewMode} from '@/types'
-import {TrashIcon, SearchIcon, ResetIcon, GridIcon, ListIcon} from '@/components/common/Icons'
 import {AssetCard} from '@/components/AssetCard'
 import {AssetListView} from '@/components/AssetListView'
+import {GridIcon, ListIcon, ResetIcon, SearchIcon, TrashIcon} from '@/components/common/Icons'
 import {AssetGridSkeleton, AssetListSkeleton} from '@/components/common/Skeleton'
+import type {Asset, AssetTypeFilter, SizeFilter, ViewMode} from '@/types'
+import {
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Dialog,
+  Flex,
+  Grid,
+  Heading,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+} from '@sanity/ui'
+import React, {useMemo, useState} from 'react'
 import styled from 'styled-components'
+
+type UnusedSortOrder = 'date' | 'size_desc' | 'size_asc' | 'name_asc' | 'name_desc'
 
 const SearchBox = styled(Box)`
   flex: 1;
@@ -45,9 +47,7 @@ export const UnusedAssets: React.FC<UnusedAssetsProps> = ({
   const [searchQuery, setSearchQuery] = useState('')
   const [assetType, setAssetType] = useState<AssetTypeFilter>('all')
   const [sizeFilter, setSizeFilter] = useState<SizeFilter>('all')
-  const [sortBy, setSortBy] = useState<
-    'date' | 'size_desc' | 'size_asc' | 'name_asc' | 'name_desc'
-  >('date')
+  const [sortBy, setSortBy] = useState<UnusedSortOrder>('date')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [confirmDelete, setConfirmDelete] = useState<{show: boolean; ids: string[]}>({
     show: false,
@@ -133,9 +133,9 @@ export const UnusedAssets: React.FC<UnusedAssetsProps> = ({
     sortedUnused.some((a) => selectedIds.includes(a._id)) && !allFilteredSelected
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Flex align="center" justify="space-between" wrap="wrap" gap={3}>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Heading size={1}>Bulk Deletion of Unused Assets</Heading>
           <Text size={1} muted>
             Showing {sortedUnused.length} of {unusedAssets.length} unused assets
@@ -192,7 +192,7 @@ export const UnusedAssets: React.FC<UnusedAssetsProps> = ({
             <Select
               fontSize={1}
               value={sortBy}
-              onChange={(e) => setSortBy(e.currentTarget.value as any)}
+              onChange={(e) => setSortBy(e.currentTarget.value as UnusedSortOrder)}
             >
               <option value="date">Upload Date</option>
               <option value="size_desc">Size (High to Low)</option>
@@ -264,7 +264,7 @@ export const UnusedAssets: React.FC<UnusedAssetsProps> = ({
           <Text align="center">No unused assets match your filter criteria.</Text>
         </Card>
       ) : viewMode === 'grid' ? (
-        <Grid columns={[2, 3, 4, 5, 6]} gap={3}>
+        <Grid gridTemplateColumns={[2, 3, 4, 5, 6]} gap={3}>
           {sortedUnused.map((asset) => (
             <AssetCard
               key={asset._id}

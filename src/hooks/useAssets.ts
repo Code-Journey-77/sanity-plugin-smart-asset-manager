@@ -1,12 +1,13 @@
 import {useState, useEffect} from 'react'
 import type {SanityClient} from 'sanity'
-import type {Asset, AssetTypeFilter, SortOrder} from '@/types'
+import type {Asset, AssetTypeFilter, SizeFilter, SortOrder} from '@/types'
 
 export function useAssets(
   sanityClient: SanityClient,
   searchQuery: string,
   sortBy: SortOrder,
   type: AssetTypeFilter,
+  sizeFilter: SizeFilter,
   offset: number,
   limit: number,
 ) {
@@ -25,27 +26,55 @@ export function useAssets(
 
         if (type === 'image') {
           filterParts.push('_type == "sanity.imageAsset"')
+        } else if (type === 'video') {
+          filterParts.push(
+            '(_type == "sanity.fileAsset" && (mimeType match "video/*" || extension in ["mp4", "webm", "mov", "mkv", "avi", "m4v"]))',
+          )
+        } else if (type === 'audio') {
+          filterParts.push(
+            '(_type == "sanity.fileAsset" && (mimeType match "audio/*" || extension in ["mp3", "wav", "ogg", "m4a", "flac", "aac"]))',
+          )
         } else if (type === 'file') {
           filterParts.push(
-            '_type == "sanity.fileAsset" && !(mimeType match "video/*") && !(mimeType match "audio/*")',
+            '_type == "sanity.fileAsset" && !(mimeType match "video/*") && !(mimeType match "audio/*") && !(extension in ["mp4", "webm", "mov", "mkv", "avi", "m4v", "mp3", "wav", "ogg", "m4a", "flac", "aac"])',
           )
-        } else if (type === 'video') {
-          filterParts.push('_type == "sanity.fileAsset" && mimeType match "video/*"')
-        } else if (type === 'audio') {
-          filterParts.push('_type == "sanity.fileAsset" && mimeType match "audio/*"')
         }
 
-        if (searchQuery) {
-          filterParts.push('(originalFilename match $searchQuery || _id match $searchQuery)')
+        if (sizeFilter === 'small') {
+          filterParts.push('size < 102400')
+        } else if (sizeFilter === 'medium') {
+          filterParts.push('size >= 102400 && size < 1048576')
+        } else if (sizeFilter === 'large') {
+          filterParts.push('size >= 1048576')
+        }
+
+        const trimmedSearch = searchQuery.trim()
+        const params: Record<string, string> = {}
+        if (trimmedSearch) {
+          filterParts.push(
+            '(originalFilename match $searchQuery || _id match $searchQuery || extension match $searchQuery)',
+          )
+          params.searchQuery = `*${trimmedSearch}*`
+        }
+
+        let orderClause = '_createdAt desc'
+        if (sortBy === '_createdAt') {
+          orderClause = '_createdAt desc'
+        } else if (sortBy === '_createdAt_asc') {
+          orderClause = '_createdAt asc'
+        } else if (sortBy === 'originalFilename' || sortBy === 'name_asc') {
+          orderClause = 'lower(originalFilename) asc'
+        } else if (sortBy === 'name_desc') {
+          orderClause = 'lower(originalFilename) desc'
+        } else if (sortBy === 'size' || sortBy === 'size_desc') {
+          orderClause = 'size desc'
+        } else if (sortBy === 'size_asc') {
+          orderClause = 'size asc'
         }
 
         const filter = filterParts.join(' && ')
-        const params = {
-          searchQuery: `*${searchQuery}*`,
-        }
-
         const countQuery = `count(*[${filter}])`
-        const query = `*[${filter}] | order(${sortBy} desc) [${offset}...${offset + limit}] {
+        const query = `*[${filter}] | order(${orderClause}) [${offset}...${offset + limit}] {
           _id,
           _type,
           url,
@@ -65,7 +94,7 @@ export function useAssets(
         ])
 
         setTotal(totalCount)
-        setAssets(results)
+        setAssets(results || [])
       } catch (error) {
         console.error('Error fetching assets:', error)
       } finally {
@@ -74,7 +103,7 @@ export function useAssets(
     }
 
     fetchAssets()
-  }, [sanityClient, searchQuery, sortBy, type, refreshSeed, offset, limit])
+  }, [sanityClient, searchQuery, sortBy, type, sizeFilter, refreshSeed, offset, limit])
 
   return {assets, loading, total, refreshAssets}
 }
