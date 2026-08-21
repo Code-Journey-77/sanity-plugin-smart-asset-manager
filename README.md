@@ -60,15 +60,16 @@ Upload multiple files at once. The plugin provides clear progress feedback and h
 
 ## ⚠️ Compatibility Note
 
-| Package | Version Requirement |
-|---|---|
-| **Sanity Studio (`sanity`)** | **`^5.0.0` or `^6.0.0`** *(Required for v2.0.0+)* |
-| **Sanity UI (`@sanity/ui`)** | **`^4.0.0`** |
-| **React (`react`, `react-dom`)** | **`^18.0.0` or `^19.0.0`** |
-| **Styled Components** | **`^6.0.0`** |
+| Package                          | Version Requirement                               |
+| -------------------------------- | ------------------------------------------------- |
+| **Sanity Studio (`sanity`)**     | **`^5.0.0` or `^6.0.0`** _(Required for v2.0.0+)_ |
+| **Sanity UI (`@sanity/ui`)**     | **`^4.0.0`**                                      |
+| **React (`react`, `react-dom`)** | **`^18.0.0` or `^19.0.0`**                        |
+| **Styled Components**            | **`^6.0.0`**                                      |
 
 > **Legacy Studio Support (Sanity v3.x)**:
 > If you are using **Sanity Studio v3.x** or earlier versions of `@sanity/ui` (v3/v4), please install **`sanity-plugin-smart-asset-manager@1.2.0`**:
+>
 > ```bash
 > npm install sanity-plugin-smart-asset-manager@1.2.0
 > ```
